@@ -4,10 +4,10 @@ export const Challenge = () => {
     const yy = 5;
 
     const handleSumNumbers = () => {
-        console.log(xx+yy)
+        console.log(xx + yy)
     };
 
-   
+
 
     return (
         <div>
