@@ -1,7 +1,11 @@
 import React from 'react'
 
-export const Fragment = () => {
+export const Fragment = ({propFragment}) => {
   return (
-    <div>Fragment</div>
+    <>
+      <h1>Primeiro titulo</h1>
+      <h2>Segundo titulo</h2>
+      <p>{propFragment}</p>
+    </>
   )
 }
