@@ -1,25 +1,30 @@
 import './App.css';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useFetch } from './hooks/useFetch';
 const url = "http://localhost:3000/products";
 
 function App() {
+  // eslint-disable-next-line
   const [products, setProducts] = useState([])
+
+  const { data: items, httpConfig, loading, error } = useFetch(url);
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    async function fetchData() {
-      const res = await fetch(url)
+  //   async function fetchData() {
+  //     const res = await fetch(url)
 
-      const data = await res.json()
+  //     const data = await res.json()
 
-      setProducts(data)
-    }
+  //     setProducts(data)
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,27 +33,36 @@ function App() {
       name,
       price,
     };
-    // eslint-disable-next-line
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(product)
-    });
+    // const res = await fetch(url, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify(product)
+    // });
 
+    // const addedProduct = await res.json();
+
+    // setProducts((prevProducts) => [...prevProducts, addedProduct]);
+
+    httpConfig(product, "POST");
+    setName("")
+    setPrice("")
 
   }
 
   return (
     <div className="App">
       <h1>Lista de Produtos</h1>
-
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}> {product.name} - R$: {product.price} </li>
-        ))}
-      </ul>
+      {loading && <p>Carregando dados...</p>}
+      {error && <p>{error}</p>}
+      {!error && (
+        <ul>
+          {items && items.map((product) => (
+            <li key={product.id}> {product.name} - R$: {product.price} </li>
+          ))}
+        </ul>
+      )}
       <div className="add-product">
         <form onSubmit={handleSubmit}>
           <label>
@@ -67,7 +81,13 @@ function App() {
               name="price"
               onChange={(e) => setPrice(e.target.value)} />
           </label>
-          <input type="submit" value="criar" />
+
+          {loading && (
+            <input type="submit" disabled value="Aguarde" />
+          )}
+          {!loading && (
+            <input type="submit" value="Criar" />
+          )}
         </form>
       </div>
     </div>
